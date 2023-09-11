@@ -1,4 +1,5 @@
 from http import HTTPMethod
+from common.model.model import convolutionalModel
 from common.router.abstractRouterConfigurator import AbstractRouterConfigurator
 from common.router.router import Router
 from module.classifeirModel.infrastructure.controller.classifeirController import ClassifeirController
@@ -12,8 +13,8 @@ class ClassifeirRoutes(AbstractRouterConfigurator):
         self.routers = [
             Router(
                 path='/',
-                controller=ClassifeirController(),
-                method=HTTPMethod.GET
+                controller=ClassifeirController(model=convolutionalModel),
+                method=HTTPMethod.POST
             )
         ]
 

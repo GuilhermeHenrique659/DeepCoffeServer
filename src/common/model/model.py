@@ -43,9 +43,9 @@ class ConvolutionalModel(nn.Module):
         return x
 
 
-model = ConvolutionalModel()
-model.load_state_dict(torch.load('src/common/model/modelo.pth', map_location=torch.device('cpu')))
-model.eval()
+convolutionalModel = ConvolutionalModel()
+convolutionalModel.load_state_dict(torch.load('src/common/model/modelo.pth', map_location=torch.device('cpu')))
+convolutionalModel.eval()
 
 
 # define a rota da API para receber uma imagem

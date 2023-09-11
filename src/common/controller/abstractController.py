@@ -21,6 +21,7 @@ class AbstractController(ABC):
         except AppError as error:
             return error.get_error_details()
         except Exception as error:
+            print(error)
             return AppError('Server internal error', 500).get_error_details()
         
     @abstractmethod
