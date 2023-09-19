@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 
-from flask import Flask
+from flask import Flask, request
+from common.adapter.flaskAdapter import FlaskAdapter
+from common.middleware.validationMiddleware import ValidationMiddleware
 from common.router.router import Router
 from typing import List
 
@@ -15,6 +17,7 @@ class AbstractRouterConfigurator(ABC):
 
     def setup_routes(self, application: Flask):
         for router in self.routers:
+            flask_adapter = FlaskAdapter(router)
             application.add_url_rule(f'/api/{self.prefix}{router.path}', 
-                                    view_func=router.controller.exec, 
+                                    view_func=flask_adapter.adapter, 
                                     methods=[router.method])
