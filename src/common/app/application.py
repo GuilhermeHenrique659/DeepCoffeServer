@@ -18,7 +18,9 @@ class Application:
             router.set_handles()
             router.setup_routes(self.__application)
 
-    def run(self):
+    def create_app(self):
+        return self.__application
+
+    def setup(self):
         self.__setup_router()
         print(self.__application.url_map)
-        self.__application.run(debug=True, port=EnvConfig.get_port(), host=EnvConfig.get_ip())

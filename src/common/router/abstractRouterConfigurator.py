@@ -20,4 +20,4 @@ class AbstractRouterConfigurator(ABC):
             flask_adapter = FlaskAdapter(router)
             application.add_url_rule(f'/api/{self.prefix}{router.path}', 
                                     view_func=flask_adapter.adapter, 
-                                    methods=[router.method])
+                                    methods=[router.method.value])

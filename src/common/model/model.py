@@ -2,6 +2,13 @@ import torch
 import logging
 import torch
 import torch.nn as nn
+import os
+
+# Obtém o diretório atual do código em execução
+current_directory = os.path.dirname(os.path.abspath(__file__))
+
+# Constrói o caminho completo para o arquivo de modelo
+modelo_path = os.path.join(current_directory, 'modelo.pth')
 
 logger = logging.getLogger(__name__)
 
@@ -38,5 +45,5 @@ class ConvolutionalModel(nn.Module):
 
 
 convolutionalModel = ConvolutionalModel()
-convolutionalModel.load_state_dict(torch.load('src/common/model/modelo.pth', map_location=torch.device('cpu')))
+convolutionalModel.load_state_dict(torch.load(modelo_path, map_location=torch.device('cpu')))
 convolutionalModel.eval()
