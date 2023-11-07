@@ -44,3 +44,7 @@ typing_extensions
 tzdata
 urllib3
 Werkzeug
+waitress
+Brotli
+image
+Flask-Compress

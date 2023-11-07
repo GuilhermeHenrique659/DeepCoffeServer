@@ -17,7 +17,6 @@ class AbstractRouterConfigurator(ABC):
 
     def setup_routes(self, application: Flask):
         for router in self.routers:
-            flask_adapter = FlaskAdapter(router)
             application.add_url_rule(f'/api/{self.prefix}{router.path}', 
-                                    view_func=flask_adapter.adapter, 
+                                    view_func= FlaskAdapter.as_view(router.controller.get_controller_name(), router, self.prefix), 
                                     methods=[router.method.value])

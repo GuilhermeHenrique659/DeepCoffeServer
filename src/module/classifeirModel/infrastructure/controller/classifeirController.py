@@ -28,7 +28,9 @@ class ClassifeirController(AbstractController):
 
         probabilities = torch.nn.functional.softmax(output[0], dim=0)
         class_index = torch.argmax(probabilities).item()
+        class_probabilities = probabilities[0].cpu().numpy()
 
-        response = {'class': class_index}
+        CATEGORIES = ['Cerscospora','Healthy','Leaf rust','Miner','Phoma']
+        response = {'class': CATEGORIES[class_index], 'probabilities': float(class_probabilities)}
 
         return response

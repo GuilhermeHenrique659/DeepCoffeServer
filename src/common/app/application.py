@@ -2,6 +2,7 @@
 from flask import Flask
 from typing import List
 from common.router.abstractRouterConfigurator import AbstractRouterConfigurator
+from common.utils.loggerUtils import LoggerUtils
 from config.envConfig import EnvConfig
 
 
