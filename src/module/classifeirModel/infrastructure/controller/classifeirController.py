@@ -25,7 +25,7 @@ class ClassifeirController(AbstractController):
 
         self.__model.eval()  # Coloque o modelo no modo de avaliação
         with torch.no_grad():
-            image = image.to(torch.device('cpu'))  # Certifique-se de mover a imagem para a mesma GPU/Dispositivo que o modelo, se aplicável
+            image = image.to(DeviceConfig.get_device())  # Certifique-se de mover a imagem para a mesma GPU/Dispositivo que o modelo, se aplicável
             outputs = self.__model(image)
             probabilities = torch.softmax(outputs, dim=1)
 
