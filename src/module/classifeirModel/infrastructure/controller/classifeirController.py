@@ -16,21 +16,29 @@ class ClassifeirController(AbstractController):
         image = Image.open(BytesIO(base64.b64decode(data['image'])))
 
         transform = transforms.Compose([
-            transforms.Resize(224),
-            transforms.CenterCrop(224),
             transforms.ToTensor(),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+            transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2470, 0.2435, 0.2616)),
+            transforms.Resize((64, 64))
         ])
-        image = transform(image).unsqueeze(0).to(DeviceConfig.get_device())
 
+        image = transform(image).unsqueeze(0)  # Adicionar uma dimensão para representar o lote (batch)
+
+        self.__model.eval()  # Coloque o modelo no modo de avaliação
         with torch.no_grad():
-            output = self.__model(image)
+            image = image.to(torch.device('cpu'))  # Certifique-se de mover a imagem para a mesma GPU/Dispositivo que o modelo, se aplicável
+            outputs = self.__model(image)
+            probabilities = torch.softmax(outputs, dim=1)
 
-        probabilities = torch.nn.functional.softmax(output[0], dim=0)
-        class_index = torch.argmax(probabilities).item()
-        class_probabilities = probabilities[0].cpu().numpy()
-
+        # As probabilidades contêm a probabilidade de cada classe
+        class_probabilities = probabilities[0].cpu().numpy()  # Converte para NumPy
         CATEGORIES = ['Cerscospora','Healthy','Leaf rust','Miner','Phoma']
-        response = {'class': CATEGORIES[class_index], 'probabilities': float(class_probabilities)}
 
+        response = []
+        for class_idx, class_prob in enumerate(class_probabilities):
+            class_name = CATEGORIES[class_idx]  # Substitua com suas próprias classes
+            response.append({
+                'Classe': class_name,
+                'Probabilidade': f'{class_prob:.4f}'
+            })
+        
         return response
