@@ -8,21 +8,17 @@ from common.middleware.validationMiddleware import ValidationMiddleware
 from common.router.router import Router
 from common.utils.loggerUtils import LoggerUtils
 
-from config.envConfig import EnvConfig
-
 
 class FlaskAdapter(View):
-    def __init__(self, router: Router, prefix: str) -> None:
+    def __init__(self, router: Router) -> None:
         self.controller = router.controller
         self.validation = router.validation
-        self.url = f'http://{EnvConfig.get_ip()}/api/{prefix}{router.path}'
 
         self.__middlewares = { 
             'validation': ValidationMiddleware(),
         }
 
     def dispatch_request(self, **args):
-        LoggerUtils.info(f'Request from: {request.host}')
         LoggerUtils.info(f'Request headers: \n{request.headers}')
         payload = {
             **args,
@@ -34,7 +30,7 @@ class FlaskAdapter(View):
             self.__middlewares.get('validation').run(payload, self.validation)
 
             response = self.controller.exec(payload)
-            return jsonify({ 'data': response, 'url': self.url })
+            return jsonify({ 'data': response, 'url': request.base_url })
         except AppValidationError as error:
             LoggerUtils.error(f'Error: {error.message}')
             return error.get_error_details()
